@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storefront/src/bloc/login/login_bloc.dart';
-import 'package:storefront/src/mobile/screens/store/store_creation_screen.dart';
+import 'package:storefront/src/mobile/screens/store/store_screen.dart';
 import 'package:storefront/src/repository/authentication/social/social_provider_factory.dart';
 import 'package:storefront/src/web/screens/store/store_screen_web.dart';
 

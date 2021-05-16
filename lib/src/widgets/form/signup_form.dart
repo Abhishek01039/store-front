@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storefront/src/bloc/signup/signup_bloc.dart';
-import 'package:storefront/src/mobile/screens/store/store_creation_screen.dart';
+import 'package:storefront/src/mobile/screens/store/store_screen.dart';
 import 'package:storefront/src/repository/authentication/authentication_repository_impl.dart';
 import 'package:storefront/src/utils/validators/email_validator.dart';
 import 'package:storefront/src/web/screens/store/store_screen_web.dart';

@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:storefront/src/config/color_config.dart';
 import 'package:storefront/src/mobile/screens/auth_screen.dart';
-import 'package:storefront/src/mobile/screens/store/store_creation_screen.dart';
+import 'package:storefront/src/mobile/screens/store/store_screen.dart';
 import 'package:storefront/src/web/screens/auth_screen_web.dart';
 import 'package:storefront/src/web/screens/store/store_screen_web.dart';
 import 'package:storefront/src/widgets/scaffold_widgets.dart';

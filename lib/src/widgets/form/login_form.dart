@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storefront/src/bloc/login/login_bloc.dart';
-import 'package:storefront/src/mobile/screens/store/store_creation_screen.dart';
+import 'package:storefront/src/mobile/screens/store/store_screen.dart';
 import 'package:storefront/src/utils/validators/email_validator.dart';
 import 'package:storefront/src/web/screens/store/store_screen_web.dart';
 import 'package:storefront/src/widgets/form/custom_auth_text_form_field.dart';
@@ -35,7 +35,6 @@ class _LoginFormState extends State<LoginForm> {
     _disposeController();
     isAutovalidate = false;
     isRememberMe = false;
-    setState(() {});
   }
 
   @override
