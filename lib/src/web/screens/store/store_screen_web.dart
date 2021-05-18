@@ -1,17 +1,38 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storefront/src/bloc/login/login_bloc.dart';
+import 'package:storefront/src/extension/replace_space_with_underscore_extension.dart';
+import 'package:storefront/src/models/store.dart';
+import 'package:storefront/src/web/router/web_router.gr.dart';
 import 'package:storefront/src/web/widgets/tralling_icon_web.dart';
 import 'package:storefront/src/widgets/scaffold_widgets.dart';
 import 'package:storefront/src/widgets/snackbar_widget.dart';
 
-import '../auth_screen_web.dart';
+class StoreScreenWeb extends StatefulWidget {
+  @override
+  _StoreScreenWebState createState() => _StoreScreenWebState();
+}
 
-class StoreScreenWeb extends StatelessWidget {
+class _StoreScreenWebState extends State<StoreScreenWeb> {
+  late Stream<QuerySnapshot<Map<String, dynamic>>> snapshot;
+
+  @override
+  void initState() {
+    super.initState();
+
+    snapshot = FirebaseFirestore.instance
+        .collection('stores')
+        .where('customerId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .snapshots()
+        .asBroadcastStream();
+  }
+
   Column _content(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -19,29 +40,26 @@ class StoreScreenWeb extends StatelessWidget {
             const SizedBox(
               height: 50,
             ),
-            _buildTrallingIcon(),
+            _buildTrallingIcon(context),
           ],
         ),
-        const Text('storefront'),
+        Text('storefront', style: Theme.of(context).textTheme.headline1),
         Expanded(
-          child: _storesStream(),
+          child: _storesStream(context),
         ),
       ],
     );
   }
 
-  Widget _buildTrallingIcon() {
+  Widget _buildTrallingIcon(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) => BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state is LogoutSuccess) {
             // navigate to root page
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => AuthScreenWeb(),
-              ),
-              ModalRoute.withName('/'),
+            context.router.pushAndPopUntil(
+              const AuthRouteWeb(),
+              predicate: ModalRoute.withName('/'),
             );
             showSnackbar(
               context: context,
@@ -68,15 +86,10 @@ class StoreScreenWeb extends StatelessWidget {
     );
   }
 
-  // Stream builder for store
-  StreamBuilder _storesStream() {
+  StreamBuilder _storesStream(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('stores')
-          .where('customerId',
-              isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-          .snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      stream: snapshot,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
         }
@@ -85,13 +98,29 @@ class StoreScreenWeb extends StatelessWidget {
           return const Text('Loading');
         }
 
+        final List<Store>? store = snapshot.data?.docs
+            .map((e) => Store.fromJson(e.data()! as Map<String, dynamic>))
+            .toList();
         return ListView.builder(
-          itemCount: snapshot.data?.docs.length,
+          itemCount: store?.length,
           itemBuilder: (context, index) {
-            final Map<String, dynamic>? title =
-                snapshot.data?.docs[index].data() as Map<String, dynamic>?;
+            // final Map<String, dynamic>? title =
+            //     snapshot.data?.docs[index].data() as Map<String, dynamic>?;
             return ListTile(
-              title: Text(title!['storeTitle'] as String? ?? ''),
+              onTap: () {
+                context.pushRoute(
+                  StoreDetailScreenWeb(
+                    storeName:
+                        ReplaceSpaceWithUnderscore(store![index].storeTitle)
+                            .text,
+                  ),
+                );
+              },
+              title: Text(store![index].storeTitle),
+              subtitle: Text(
+                store[index].ourStory ?? '',
+                overflow: TextOverflow.ellipsis,
+              ),
             );
           },
         );

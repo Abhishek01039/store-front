@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storefront/src/bloc/login/login_bloc.dart';
-import 'package:storefront/src/mobile/screens/store/store_screen.dart';
+import 'package:storefront/src/mobile/router/auto_router.gr.dart';
 import 'package:storefront/src/repository/authentication/social/social_provider_factory.dart';
-import 'package:storefront/src/web/screens/store/store_screen_web.dart';
-
+import 'package:storefront/src/web/router/web_router.gr.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:storefront/src/widgets/snackbar_widget.dart';
 import 'package:storefront/src/widgets/social_auth_button.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -35,19 +35,9 @@ class SocialAuthButtons extends StatelessWidget {
             if (state is SocialLoginSuccessState) {
               if (state.email != null) {
                 if (kIsWeb) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => StoreScreenWeb(),
-                    ),
-                  );
+                  context.router.replace(const StoreRouteWeb());
                 } else {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => StoreScreen(),
-                    ),
-                  );
+                  context.router.replace(const StoreRoute());
                 }
               }
               showSnackbar(

@@ -1,12 +1,14 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storefront/src/bloc/login/login_bloc.dart';
-import 'package:storefront/src/mobile/screens/store/store_screen.dart';
+import 'package:storefront/src/mobile/router/auto_router.gr.dart';
 import 'package:storefront/src/utils/validators/email_validator.dart';
-import 'package:storefront/src/web/screens/store/store_screen_web.dart';
+import 'package:storefront/src/web/router/web_router.gr.dart';
 import 'package:storefront/src/widgets/form/custom_auth_text_form_field.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+
 import '../button.dart';
 import '../circular_indicator.dart';
 import '../snackbar_widget.dart';
@@ -55,19 +57,9 @@ class _LoginFormState extends State<LoginForm> {
             if (state.email != null) {
               _resetState();
               if (kIsWeb) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => StoreScreenWeb(),
-                  ),
-                );
+                context.router.navigate(const StoreRouteWeb());
               } else {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => StoreScreen(),
-                  ),
-                );
+                context.router.replace(const StoreRoute());
               }
               showSnackbar(
                 context: context,
