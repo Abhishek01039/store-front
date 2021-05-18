@@ -113,6 +113,7 @@ class _StoreScreenWebState extends State<StoreScreenWeb> {
                     storeName:
                         ReplaceSpaceWithUnderscore(store![index].storeTitle)
                             .text,
+                    store: store[index],
                   ),
                 );
               },
