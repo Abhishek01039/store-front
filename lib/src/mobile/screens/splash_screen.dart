@@ -17,8 +17,8 @@ class MySpalsh extends StatefulWidget {
 
 class _MySpalshState extends State<MySpalsh> {
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     Future.delayed(
       const Duration(seconds: 2),
       () async {

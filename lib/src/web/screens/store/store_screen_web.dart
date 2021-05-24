@@ -22,7 +22,6 @@ class _StoreScreenWebState extends State<StoreScreenWeb> {
   @override
   void initState() {
     super.initState();
-
     snapshot = FirebaseFirestore.instance
         .collection('stores')
         .where('customerId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
@@ -87,9 +86,9 @@ class _StoreScreenWebState extends State<StoreScreenWeb> {
   }
 
   StreamBuilder _storesStream(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
+    return StreamBuilder<QuerySnapshot?>(
       stream: snapshot,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot?> snapshot) {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
         }
@@ -99,13 +98,12 @@ class _StoreScreenWebState extends State<StoreScreenWeb> {
         }
 
         final List<Store>? store = snapshot.data?.docs
-            .map((e) => Store.fromJson(e.data()! as Map<String, dynamic>))
+            .map<Store>(
+                (e) => Store.fromJson(e.data()! as Map<String, dynamic>))
             .toList();
         return ListView.builder(
           itemCount: store?.length,
           itemBuilder: (context, index) {
-            // final Map<String, dynamic>? title =
-            //     snapshot.data?.docs[index].data() as Map<String, dynamic>?;
             return ListTile(
               onTap: () {
                 context.pushRoute(

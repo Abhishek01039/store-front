@@ -1,8 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:storefront/app.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
-void main() {
+Future<void> main() async {
+  if (!kIsWeb) {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+  }
+
   // initialiaze the facebook javascript SDK
   FacebookAuth.instance.webInitialize(
     appId: '206682137884266',
